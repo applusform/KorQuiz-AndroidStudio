@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Created by ApplusForm.com on 2015.04.13
+
+	Permission is granted to copy, distribute, modify under the terms of ApplusForm License.
+
+	Copyright (C) 2013 ApplusForm.com All rights reserved.
+-->
+<MOML version="1.1.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.applusform.com/xsd/moml_ui_1.1.8.xsd">
+	<THEMES>
+		<THEME id="text" fontFace="EBS_HMJE_R.ttf"/>
+		<THEME element="LABEL" parent="text" />
+		<THEME id="menu" parent="text" shape="roundRect(5)" img="white" borderStyle="solid:1|#80a0a0a0" pressedImg="#a0ffc0" overlay1="gradation:tb|#50ffffff|#60808080"  textColor="darkBlue" padding="5,10,5,10" fontSize="13"/>
+		<THEME id="qa"  fontFace="Daum_Regular.ttf" textAlign="left" minFontSize="-1" multiLine="true"/>
+		<THEME id="expl"  parent="qa" fontSize="12" textColor="gray"/>
+		<THEME id="answer" parent="qa" layout="300,auto" shape="roundRect(5)" img="snow" pressedImg="lightGreen" margin="0,0,0,10" onClick="function.checkAnswer" padding="5,10,5,10" fontSize="13" />
+	</THEMES>
+	<UILAYOUT portrait="320,480" landscape="320,480">
+		<WINDOW layout="0,0,320,480" img="white" />
+		<WINDOW layout="0,0,320,480" img="HunMinJeongEum.png" />
+		<WINDOW layout="0,0,320,480" img="#f4ffffff" />
+		<WINDOW layout="0,0,320,480" align="linear:vertical" padding="10,20,10,20" >
+			<WINDOW layout="300,40" align="linear:hJustify" margin="0,0,0,10">
+				<STYLEBUTTON themeId="menu" text="오늘의 문제" onClick="function.searchQuiz(date.now)"/>
+				<STYLEBUTTON themeId="menu" text="전날 문제" onClick="function.searchQuiz(userVariable.qopen, -1)"/>
+				<STYLEBUTTON themeId="menu" text="날짜 지정" onClick="datePopup.visible = true"/>
+				<STYLEBUTTON themeId="menu" text="아무날이나" onClick="function.randomQuiz"/>
+			</WINDOW>
+			<WINDOW align="linear">
+				<LABEL id="result" layout="200,30" fontSize="15" textAlign="center"/>
+				<WINDOW align="linear:vertical" layout="100,30">
+					<WINDOW align="linear">
+						<LABEL text="연속 정답 : " fontSize="9"/>
+						<LABEL id="wins" text="{saveVariable.wins}" fontSize="9"/>
+					</WINDOW>
+					<WINDOW align="linear">
+						<LABEL text="최고 기록 : " fontSize="9"/>
+						<LABEL id="best" text="{saveVariable.best}" fontSize="9"/>
+					</WINDOW>
+				</WINDOW>
+			</WINDOW>
+			<WINDOW align="linear:right" layout="300,20" margin="0,10,0,0">
+				<LABEL text="출제일 : " fontSize="11" textColor="gray"/>
+				<LABEL id="quizDate" fontSize="11" textColor="gray"/>
+			</WINDOW>
+			<WINDOW layout="300,330" scroll="vertical" >
+				<LABEL id="quiz" layout="300,auto" margin="0,0,0,15" themeId="qa"/>
+				<STYLEBUTTON id="a1" themeId="answer" />
+				<STYLEBUTTON id="a2" themeId="answer" />
+				<STYLEBUTTON id="a3" themeId="answer" />
+				<STYLEBUTTON id="a4" themeId="answer" />
+				<LABEL id="expl" layout="300,auto" margin="0,0,0,15" themeId="expl"/>
+			</WINDOW>
+		</WINDOW>
+		<LABEL layout="5,465,310,10" text="자료제공 : 서울특별시, 서울사랑홈페이지   (토요일, 일요일에는 문제가 출제되지 않습니다.)" fontSize="9"/>
+
+		<WINDOW id="intro" layout="0,0,320,480" img="white" onClick="'none'">
+			<WINDOW layout="0,0,320,480" img="HunMinJeongEum.png" />
+			<WINDOW layout="0,0,320,480" img="#d0ffffff" />
+			<LABEL layout="0,100,320,50" textAlign="center" text="매일매일" fontSize="40" textColor="#804030" textShadow="#308080ff"/>
+			<LABEL layout="0,150,320,50" textAlign="center" text="우리말 퀴즈" fontSize="50" textColor="#304080" textShadow="#308080ff"/>
+		</WINDOW>
+
+		<POPUP id="datePopup" layout="0,0,320,480" img="white" align="linear:vertical|center|subCenter" visible="invisible" onBackKey="caller.visible = false; true;" showEffect="fade:300" hideEffect="fade:300">
+			<LABEL layout="230,auto" text="문제 출제일을 선택하세요." margin="20"/>
+			<DATETIMEPICKER id="datePicker" layout="300,200" type="date" />
+			<WINDOW align="linear:justify|center" layout="200,100">
+				<STYLEBUTTON themeId="menu" text="확인" onClick="function.pickDate" padding="20,10,20,10"/>
+				<STYLEBUTTON themeId="menu" text="취소" onClick="datePopup.visible = false" padding="20,10,20,10"/>
+			</WINDOW>
+		</POPUP>
+	</UILAYOUT>
+	<CMD cmd="serviceKey = '4845714c4d6879703832634f435063'" />
+	<CMD cmd="userVariable.apiUrl = 'http://openapi.seoul.go.kr:8088/'+serviceKey+'/xml/KoreanAnswerInfo/1/4/'"/>
+
+	<CMD cmd="date.format = 'yyyyMMdd'" />
+	<CMD cmd="date.locale = 'ko'" />
+
+	<CMD cmd="function.searchQuiz(date.now)"/>
+	<CMD cmd="animation.hide('intro', 'fade', '', 1000, '')" delay="2000"/>
+
+	<FUNCTION id="showQuiz(qopenDate)">
+		<CMD cmd="xml = file.read(userVariable.apiUrl + qopenDate)"/>
+		<CMD cmd="count = xpath.evaluateEx(xml, 'count(//row)')" />
+		<CMD cmd="userVariable.code = xpath.evaluateEx(xml, '//CODE/text()')" />
+		<CMD cmd="userVariable.message = xpath.evaluateEx(xml, '//MESSAGE/text()')" />
+		<CMD condition="count == 4" >
+			<CMD cmd="result.text=''" />
+			<CMD cmd="expl.text=''" />
+			<CMD cmd="a1.img = 'snow'" />
+			<CMD cmd="a2.img = 'ghostWhite'" />
+			<CMD cmd="a3.img = 'mintCream'" />
+			<CMD cmd="a4.img = 'ivory'" />
+			<CMD cmd="qName = xpath.evaluateEx(xml, '//Q_NAME/text()')" />
+			<!-- ＜br＞ 태그는 줄바꿈 문자열로 변경한다.-->
+			<CMD cmd="qName = string.replace(qName, '&lt;br&gt;', '\n')" />
+			<CMD cmd="quiz.text = qName" />
+			<CMD cmd="a1.text = '1.  ' + xpath.evaluateEx(xml, '//row[1]/A_NAME/text()')" />
+			<CMD cmd="a1.correct = xpath.evaluateEx(xml, '//row[1]/A_CORRECT/text()')" />
+			<CMD cmd="a2.text = '2.  ' + xpath.evaluateEx(xml, '//row[2]/A_NAME/text()')" />
+			<CMD cmd="a2.correct = xpath.evaluateEx(xml, '//row[2]/A_CORRECT/text()')" />
+			<CMD cmd="a3.text = '3.  ' + xpath.evaluateEx(xml, '//row[3]/A_NAME/text()')" />
+			<CMD cmd="a3.correct = xpath.evaluateEx(xml, '//row[3]/A_CORRECT/text()')" />
+			<CMD cmd="a4.text = '4.  ' + xpath.evaluateEx(xml, '//row[4]/A_NAME/text()')" />
+			<CMD cmd="a4.correct = xpath.evaluateEx(xml, '//row[4]/A_CORRECT/text()')" />
+			<CMD cmd="userVariable.qopen = xpath.evaluateEx(xml, '//Q_OPEN/text()')" />
+			<CMD cmd="userVariable.qseq = xpath.evaluateEx(xml, '//Q_SEQ/text()')" />
+			<CMD cmd="quizDate.text = date.getFormatDate(userVariable.qopen, 'yyyy년 M월 d일 (EEEE)')" />
+			<RETURN cmd="true"/>
+		</CMD>
+		<RETURN cmd="false"/>
+	</FUNCTION>
+
+	<FUNCTION id="searchQuiz(qdate, start)">
+		<LOOP index="i = start" count="14" step="-1">
+			<CMD cmd="newDate = date.add(qdate, 'day', i)"/>
+			<CMD cmd="weekDay = date.getWeekDay(newDate)" />
+			<CONTINUE condition="weekDay == '토요일' or weekDay == '일요일'" />
+			<BREAK condition="function.showQuiz(newDate)" />
+		</LOOP>
+		<CMD cmd="function.checkErrorCode" />
+	</FUNCTION>
+
+	<FUNCTION id="checkErrorCode(code)">
+		<RETURN condition="userVariable.code == ''" cmd="device.systemPopup('서버에 연결할 수 없습니다.')"/>
+		<RETURN condition="userVariable.code != 'INFO-000'" cmd="device.systemPopup(userVariable.message)"/>
+	</FUNCTION>
+
+	<FUNCTION id="pickDate">
+		<RETURN condition="(datePicker.year * 10000 +  datePicker.month * 100 + datePicker.day) lt 20120625" cmd="device.systemPopup('2012년 6월 25일 이후부터 선택 가능합니다.')"/>
+		<CMD cmd="newDate = string.format('%04d%02d%02d', datePicker.year, datePicker.month, datePicker.day)" />
+		<CMD cmd="function.searchQuiz(newDate, 0)" />
+		<CMD cmd="datePopup.visible = false"/>
+	</FUNCTION>
+
+	<FUNCTION id="randomQuiz(start)">
+		<CMD cmd="now = date.now" />
+		<CMD cmd="diff = date.diffDay('20120625', now)" />
+		<CMD cmd="r = math.rand(diff)" />
+		<CMD cmd="function.searchQuiz(now, -r)" />
+	</FUNCTION>
+
+	<FUNCTION id="checkAnswer">
+		<CMD condition="caller.correct == '정답'" >
+			<CMD cmd="result.textColor='royalBlue'" />
+			<LOOP count="3" delay="200">
+				<CMD cmd="result.text=''" />
+				<CMD cmd="result.text='정답입니다'" delay="100"/>
+			</LOOP>
+			<CMD cmd="caller.defaultImg = 'cornflowerBlue'" />
+			<CMD condition="saveVariable.qseq != userVariable.qseq">
+				<CMD cmd="saveVariable.qseq = userVariable.qseq"/>
+				<CMD cmd="saveVariable.wins = ++saveVariable.wins"/>
+				<CMD condition="saveVariable.best lt saveVariable.wins" cmd="saveVariable.best = saveVariable.wins" />
+			</CMD>
+			<CMD cmd="function.explain(userVariable.qseq)" />
+			<ELSECMD cmd="result.textColor='tomato'" />
+			<ELSECMD cmd="result.text='틀렸습니다'" />
+			<ELSECMD cmd="saveVariable.qseq = 0"/>
+			<ELSECMD cmd="saveVariable.wins=0" />
+			<ELSECMD cmd="device.vibrator.vibrate(400)" />
+		</CMD>
+		<CMD cmd="wins.text = saveVariable.wins" />
+		<CMD cmd="best.text = saveVariable.best" />
+	</FUNCTION>
+
+	<FUNCTION id="explain(qseq)">
+		<CMD cmd="html= file.read('http://love.seoul.go.kr/contents/Q4.asp?q_seq=' + qseq)" />
+		<CMD cmd="beginStr ='&lt;div style=&quot;border: 1px solid rgb(0, 0, 0); margin: 0px 10px;&quot;&gt;\r\n\t\t\t\t'" />
+		<CMD cmd="endStr = '\r\n\t\t\t\t&lt;/div&gt;'" />
+		<CMD cmd="beginPos = string.find(html, beginStr)" />
+		<CMD cmd="endPos = string.find(html, endStr)" />
+		<CMD condition="beginPos gt 0 and beginPos lt endPos">
+			<CMD cmd="text = string.sub(html, beginPos + string.len(beginStr), endPos - beginPos - string.len(beginStr))"/>
+			<CMD condition="string.len(text)" cmd="expl.text = '해설 : \r\n' + text" />
+		</CMD>
+	</FUNCTION>
+</MOML>
