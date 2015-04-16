@@ -20,3 +20,5 @@ Screen shot :
 ▣ 자료제공
 - 앱에서 제공하는 우리말 문제의 저작권은 '서울사랑홈페이지'에게 있으며 '서울 열린 데이터 광장'을 통해 제공되는 Open API를 사용해 구현하였습니다.
 
+▣ 설치
+- [Google Play](https://play.google.com/store/apps/details?id=com.applusform.korquiz)
