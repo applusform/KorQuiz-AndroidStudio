@@ -10,7 +10,7 @@
 	<THEMES>
 		<THEME id="text" fontFace="EBS_HMJE_R.ttf"/>
 		<THEME element="LABEL" parent="text" />
-		<THEME id="menu" parent="text" shape="roundRect(5)" img="white" borderStyle="solid:1|#80a0a0a0" pressedImg="#a0ffc0" overlay1="gradation:tb|#50ffffff|#60808080"  textColor="darkBlue" padding="5,10,5,10" fontSize="13"/>
+		<THEME id="menu" parent="text" shape="roundRect(5)" img="white" borderStyle="solid:1|#80a0a0a0" pressedImg="paleGreen" overlay1="gradation:tb|#50ffffff|#60808080" textColor="darkBlue" padding="5,10,5,10" fontSize="13"/>
 		<THEME id="qa"  fontFace="Daum_Regular.ttf" textAlign="left" minFontSize="-1" multiLine="true"/>
 		<THEME id="expl"  parent="qa" fontSize="12" textColor="gray"/>
 		<THEME id="answer" parent="qa" layout="300,auto" shape="roundRect(5)" img="snow" pressedImg="lightGreen" margin="0,0,0,10" onClick="function.checkAnswer" padding="5,10,5,10" fontSize="13" />
@@ -71,7 +71,7 @@
 		</POPUP>
 	</UILAYOUT>
 	<CMD cmd="serviceKey = '4845714c4d6879703832634f435063'" />
-	<CMD cmd="userVariable.apiUrl = 'http://openapi.seoul.go.kr:8088/'+serviceKey+'/xml/KoreanAnswerInfo/1/4/'"/>
+	<CMD cmd="userVariable.apiUrl = 'http://openapi.seoul.go.kr:8088/' + serviceKey + '/xml/KoreanAnswerInfo/1/4/'"/>
 
 	<CMD cmd="date.format = 'yyyyMMdd'" />
 	<CMD cmd="date.locale = 'ko'" />
@@ -127,8 +127,8 @@
 	</FUNCTION>
 
 	<FUNCTION id="pickDate">
-		<RETURN condition="(datePicker.year * 10000 +  datePicker.month * 100 + datePicker.day) lt 20120625" cmd="device.systemPopup('2012년 6월 25일 이후부터 선택 가능합니다.')"/>
-		<CMD cmd="newDate = string.format('%04d%02d%02d', datePicker.year, datePicker.month, datePicker.day)" />
+		<CMD cmd="newDate = datePicker.year * 10000 + datePicker.month * 100 + datePicker.day" />
+		<RETURN condition="newDate lt 20120625" cmd="device.systemPopup('2012년 6월 25일 이후부터 선택 가능합니다.')"/>
 		<CMD cmd="function.searchQuiz(newDate, 0)" />
 		<CMD cmd="datePopup.visible = false"/>
 	</FUNCTION>
@@ -142,7 +142,7 @@
 
 	<FUNCTION id="checkAnswer">
 		<CMD condition="caller.correct == '정답'" >
-			<CMD cmd="result.textColor='royalBlue'" />
+			<CMD cmd="result.textColor = 'royalBlue'" />
 			<LOOP count="3" delay="200">
 				<CMD cmd="result.text=''" />
 				<CMD cmd="result.text='정답입니다'" delay="100"/>
@@ -154,10 +154,10 @@
 				<CMD condition="saveVariable.best lt saveVariable.wins" cmd="saveVariable.best = saveVariable.wins" />
 			</CMD>
 			<CMD cmd="function.explain(userVariable.qseq)" />
-			<ELSECMD cmd="result.textColor='tomato'" />
+			<ELSECMD cmd="result.textColor = 'tomato'" />
 			<ELSECMD cmd="result.text='틀렸습니다'" />
 			<ELSECMD cmd="saveVariable.qseq = 0"/>
-			<ELSECMD cmd="saveVariable.wins=0" />
+			<ELSECMD cmd="saveVariable.wins = 0" />
 			<ELSECMD cmd="device.vibrator.vibrate(400)" />
 		</CMD>
 		<CMD cmd="wins.text = saveVariable.wins" />
