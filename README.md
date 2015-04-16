@@ -17,9 +17,9 @@ Screen shot :
 - 운영사정에 따라 중간 중간 문제가 출제되지 않는 기간이 존재합니다.
 - 2014년 7월 10일 이전에 줄제된 문제는 해설이 존재하지 않습니다.
 
-##### 자료제공
+#### 자료제공
 - 앱에서 제공하는 우리말 문제의 저작권은 '서울사랑홈페이지'에게 있으며 '서울 열린 데이터 광장'을 통해 제공되는 Open API를 사용해 구현하였습니다.
 
-##### 배포 버전 실행방법
-- 일반 사용자는 [Google Play](https://play.google.com/store/apps/details?id=com.applusform.korquiz)에서 설치할 수 있습니다.
+#### 배포 버전 실행방법
+- 일반 사용자는 [Google Play의 "매일매일 우리말 퀴즈"](https://play.google.com/store/apps/details?id=com.applusform.korquiz)를 설치하시면 됩니다.
 - [MOML Application Viewer](https://play.google.com/store/apps/details?id=org.mospi.momlappviewer)로 실행하기 위해서는 주소창에 **applusform.github.io/KorQuiz-AndroidStudio** 를 입력하십시오.
