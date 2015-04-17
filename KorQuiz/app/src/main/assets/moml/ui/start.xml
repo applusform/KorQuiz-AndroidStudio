@@ -143,10 +143,8 @@
 	<FUNCTION id="checkAnswer">
 		<CMD condition="caller.correct == '정답'" >
 			<CMD cmd="result.textColor = 'royalBlue'" />
-			<LOOP count="3" delay="200">
-				<CMD cmd="result.text=''" />
-				<CMD cmd="result.text='정답입니다'" delay="100"/>
-			</LOOP>
+			<CMD cmd="result.text='정답입니다'"/>
+			<CMD cmd="animation.show('result', 'fade', '', 400, '')" />
 			<CMD cmd="caller.defaultImg = 'cornflowerBlue'" />
 			<CMD condition="saveVariable.qseq != userVariable.qseq">
 				<CMD cmd="saveVariable.qseq = userVariable.qseq"/>
