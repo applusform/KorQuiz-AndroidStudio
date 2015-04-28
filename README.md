@@ -21,5 +21,5 @@ Screen shot :
 - 앱에서 제공하는 우리말 문제의 저작권은 '서울사랑홈페이지'에게 있으며 '서울 열린 데이터 광장'을 통해 제공되는 Open API를 사용해 구현하였습니다.
 
 #### 배포 버전 실행방법
-- 일반 사용자는 [Google Play의 "매일매일 우리말 퀴즈"](https://play.google.com/store/apps/details?id=com.applusform.korquiz)를 설치하시면 됩니다.
-- [MOML Application Viewer](https://play.google.com/store/apps/details?id=org.mospi.momlappviewer)로 실행하기 위해서는 주소창에 **applusform.github.io/KorQuiz-AndroidStudio** 를 입력하십시오.
+- 일반 사용자는 [Google Play Store](https://play.google.com/store/apps/details?id=com.applusform.korquiz)나 [Apple App Store](https://itunes.apple.com/app/id985955322)에서 "매일매일 우리말 퀴즈"를 설치하시면 됩니다.
+- MOML Application Viewer ([Google Play Store](https://play.google.com/store/apps/details?id=org.mospi.momlappviewer), [Xcode Project](https://github.com/applusform/MOMLAppViewer_iOS), [Android Studio Project](https://github.com/applusform/MOMLAppViewer_Android_Studio))로 실행하기 위해서는 주소창에 **applusform.github.io/KorQuiz-AndroidStudio** 를 입력하십시오.
